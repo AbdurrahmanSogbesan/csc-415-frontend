@@ -1,18 +1,24 @@
-import { ReactNode } from "react";
-import { Navigate, Route, Routes , useLocation } from "react-router";
+import { ReactNode, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router";
 import MainLayout from "./MainLayout";
-import { AuthRoutes } from "@/auth";
-import Home from "@/home";
+import { AuthRoutes } from "@/app/auth";
+import Home from "@/app/home";
+import { useAuthStore } from "@/lib/stores/auth";
 
 // Our auth middleware component
 function RequireAuth({ children }: { children: ReactNode }) {
-  const { user } = { user: true };
+  const { isAuthenticated, checkAuth } = useAuthStore();
   const location = useLocation();
 
-  if (user) {
-    return children;
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (!isAuthenticated) {
+    return <Navigate replace to="/auth" state={{ from: location }} />;
   }
-  return <Navigate replace to={"/auth"} state={{ from: location }} />;
+
+  return children;
 }
 
 // The pages of the app
@@ -29,6 +35,7 @@ function MainRoutes() {
         <Route path="budgets" element={<div>Budget Tracking</div>} />
         <Route path="savings-goals" element={<div>Savings Goals</div>} />
         <Route path="account" element={<div>User Account</div>} />
+        <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </MainLayout>
   );
