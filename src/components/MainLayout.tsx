@@ -1,14 +1,17 @@
 import { ReactNode } from "react";
 import { NavLink } from "react-router";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
+  const logout = useAuthStore((s) => s.logout);
+
   return (
     <div className="flex min-h-screen flex-col bg-gray-100">
       <header className="bg-blue-700 text-white shadow-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <h1 className="text-3xl font-bold">My Application</h1>
           <nav>
-            <ul className="flex space-x-6">
+            <ul className="flex items-center space-x-6">
               <li>
                 <NavLink
                   className="transition hover:text-blue-300"
@@ -48,6 +51,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 >
                   Account
                 </NavLink>
+              </li>
+              <li>
+                <button
+                  onClick={logout}
+                  className="rounded bg-red-600 px-4 py-2 font-medium transition hover:bg-red-700"
+                >
+                  Logout
+                </button>
               </li>
             </ul>
           </nav>

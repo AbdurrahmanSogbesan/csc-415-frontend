@@ -3,16 +3,6 @@ import { persist } from "zustand/middleware";
 import { jwtDecode } from "jwt-decode";
 import { tokenManager } from "../utils";
 
-interface User {
-  exp: number;
-  full_name: string;
-  iat: number;
-  jti: string;
-  role: string;
-  token_type: string;
-  user_id: number;
-}
-
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
@@ -48,6 +38,7 @@ export const useAuthStore = create<AuthState>()(
 
       checkAuth: () => {
         const { accessToken } = tokenManager.getTokens();
+        // console.log(accessToken, "accessToken");
 
         if (!accessToken) {
           get().logout();

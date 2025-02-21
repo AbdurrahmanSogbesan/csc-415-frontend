@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -13,30 +12,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useMutation } from "@tanstack/react-query";
-import { apiPost } from "@/lib/api";
-import { useAuthStore } from "@/lib/stores/auth";
-import { useNavigate } from "react-router";
-import { useToast } from "@/hooks/use-toast";
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .min(8, "Password must be at least 8 characters"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { loginSchema } from "../utils";
+import { LoginForm } from "../utils";
+import { useLogin } from "@/hooks/auth";
 
 export function LoginPage({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const form = useForm<LoginFormValues>({
+  const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -44,35 +28,10 @@ export function LoginPage({
     },
   });
 
-  const { toast } = useToast();
-
   const { isSubmitting, isValid } = form.formState;
-  const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
+  const { mutateAsync: loginMutation } = useLogin();
 
-  const { mutateAsync: loginMutation } = useMutation({
-    mutationKey: ["login"],
-    mutationFn: async (data: LoginFormValues) => {
-      const res = await apiPost<TokenResponse>("/user/login/", data);
-      return res;
-    },
-    onSuccess: (data) => {
-      if (data.access && data.refresh) {
-        login(data);
-        navigate("/");
-      }
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-      console.error(error);
-    },
-  });
-
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginForm) => {
     await loginMutation(data);
   };
 
@@ -85,7 +44,7 @@ export function LoginPage({
       >
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
-          <p className="text-muted-foreground text-balance text-sm">
+          <p className="text-balance text-sm text-muted-foreground">
             Enter your email below to login to your account
           </p>
         </div>
