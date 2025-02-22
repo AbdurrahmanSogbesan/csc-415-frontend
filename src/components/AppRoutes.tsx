@@ -28,13 +28,8 @@ function MainRoutes() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="dashboard" element={<Navigate replace to={"/"} />} />
-        <Route
-          path="transactions"
-          element={<div>Transactions Management</div>}
-        />
-        <Route path="budgets" element={<div>Budget Tracking</div>} />
-        <Route path="savings-goals" element={<div>Savings Goals</div>} />
-        <Route path="account" element={<div>User Account</div>} />
+        <Route path="rate-lecturers" element={<div>Rate Lecturers</div>} />
+        <Route path="settings" element={<div>Settings</div>} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </MainLayout>
