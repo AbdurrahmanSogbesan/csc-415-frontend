@@ -4,6 +4,7 @@ import MainLayout from "./MainLayout";
 import { AuthRoutes } from "@/app/auth";
 import Home from "@/app/home";
 import { useAuthStore } from "@/lib/stores/auth";
+import Settings from "@/app/settings";
 
 // Our auth middleware component
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -29,7 +30,7 @@ function MainRoutes() {
         <Route index element={<Home />} />
         <Route path="dashboard" element={<Navigate replace to={"/"} />} />
         <Route path="rate-lecturers" element={<div>Rate Lecturers</div>} />
-        <Route path="settings" element={<div>Settings</div>} />
+        <Route path="settings" element={<Settings />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </MainLayout>

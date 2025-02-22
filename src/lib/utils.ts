@@ -118,3 +118,20 @@ export const refreshAccessToken = async () => {
 export function getInitialsFromName(firstName?: string, lastName?: string) {
   return (firstName?.[0] || "") + (lastName?.[0] || "");
 }
+
+export function getDirtyValues(
+  dirtyFields: object | boolean,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  allValues: Record<string, any>,
+): object {
+  if (dirtyFields === true || Array.isArray(dirtyFields)) return allValues;
+  return Object.fromEntries(
+    Object.keys(dirtyFields as object).map((key) => [
+      key,
+      getDirtyValues(
+        dirtyFields[key as keyof typeof dirtyFields],
+        allValues[key],
+      ),
+    ]),
+  );
+}
