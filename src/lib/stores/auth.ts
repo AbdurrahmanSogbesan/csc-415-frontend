@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { jwtDecode } from "jwt-decode";
 import { tokenManager } from "../utils";
 
 interface AuthState {
@@ -23,10 +22,9 @@ export const useAuthStore = create<AuthState>()(
       login: (tokens) => {
         try {
           tokenManager.setTokens(tokens.access, tokens.refresh);
-          const decoded = jwtDecode<User>(tokens.access);
-          set({ user: decoded, isAuthenticated: true });
+          set({ isAuthenticated: true });
         } catch (error) {
-          console.error("Failed to decode user from token:", error);
+          console.error("Failed to set tokens:", error);
           get().logout();
         }
       },
@@ -38,26 +36,15 @@ export const useAuthStore = create<AuthState>()(
 
       checkAuth: () => {
         const { accessToken } = tokenManager.getTokens();
-        // console.log(accessToken, "accessToken");
-
         if (!accessToken) {
           get().logout();
           return false;
         }
-
-        try {
-          const decoded = jwtDecode<User>(accessToken);
-          set({ user: decoded, isAuthenticated: true });
-          return true;
-        } catch (error) {
-          console.error("Failed to decode access token:", error);
-          get().logout();
-          return false;
-        }
+        return true;
       },
     }),
     {
-      name: "auth-storage", // unique name for localStorage key
+      name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,

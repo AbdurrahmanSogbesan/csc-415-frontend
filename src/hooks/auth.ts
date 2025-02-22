@@ -1,31 +1,44 @@
-import { apiPost } from "@/lib/api";
-import { useMutation } from "@tanstack/react-query";
+import { apiGet, apiPost } from "@/lib/api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "./use-toast";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "@/lib/stores/auth";
 import { LoginForm, RegisterForm } from "@/app/auth/utils";
+import { AxiosError } from "axios";
 
 export function useLogin() {
   const navigate = useNavigate();
-  const login = useAuthStore((s) => s.login);
+
+  const { setUser, login, logout } = useAuthStore();
+
   const { toast } = useToast();
+
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["login"],
     mutationFn: async (data: LoginForm) => {
       const res = await apiPost<TokenResponse>("/user/login/", data);
-      return res;
-    },
-    onSuccess: (data) => {
-      if (data.access && data.refresh) {
-        login(data);
-        navigate("/");
+
+      if (res.access && res.refresh) {
+        login(res);
       }
     },
+    onSuccess: async () => {
+      const user = await apiGet<User>("/user/detail/");
+      queryClient.setQueryData(["get-user-details"], user);
+      setUser(user);
+
+      navigate("/");
+    },
     onError: (error) => {
+      logout();
       toast({
         title: "Error",
-        description: "Invalid credentials",
+        description:
+          error instanceof AxiosError && error.response?.status === 401
+            ? "Invalid credentials"
+            : "Something went wrong",
         variant: "destructive",
       });
       console.error(error);
@@ -57,6 +70,16 @@ export function useRegister() {
         variant: "destructive",
       });
       console.error(error);
+    },
+  });
+}
+
+export function useGetUser() {
+  return useQuery({
+    queryKey: ["get-user-details"],
+    queryFn: async () => {
+      const res = await apiGet<User>("/user/detail/");
+      return res;
     },
   });
 }
