@@ -26,6 +26,10 @@ export function useLogin() {
     },
     onSuccess: async () => {
       const user = await apiGet<User>("/user/detail/");
+
+      // prevent admin from accessing the app (make e no crash abeg)
+      if (user.role === "admin") throw new Error("Admin not allowed");
+
       queryClient.setQueryData(["get-user-details"], user);
       setUser(user);
 
@@ -38,7 +42,7 @@ export function useLogin() {
         description:
           error instanceof AxiosError && error.response?.status === 401
             ? "Invalid credentials"
-            : "Something went wrong",
+            : error.message || "Something went wrong",
         variant: "destructive",
       });
       console.error(error);

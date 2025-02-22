@@ -3,7 +3,21 @@ import AppRoutes from "./components/AppRoutes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/toaster";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  // todo: look back into this
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      retry: 0,
+      staleTime: 60 * 1000,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+    mutations: {
+      retry: 0,
+    },
+  },
+});
 
 function App() {
   return (
