@@ -45,7 +45,7 @@ type RateLecturerForm = z.infer<typeof ratingFormSchema>;
 export function RateLecturers() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { setUser, user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
 
   const { data: lecturers, isLoading } = useQuery({
     queryKey: ["get-lecturers"],
@@ -58,11 +58,6 @@ export function RateLecturers() {
       apiPost("/rate_lecturers/", { ratings: data }),
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["get-lecturers"] });
-
-      const user = await apiGet<User>("/user/detail/");
-
-      queryClient.setQueryData(["get-user-details"], user);
-      setUser(user);
 
       toast({
         title: "Lecturers rated successfully",
@@ -86,8 +81,6 @@ export function RateLecturers() {
       lecturer,
       rating: parseInt(rating),
     }));
-
-    console.log("formattedData", formattedData);
 
     await rateLecturers(formattedData);
   };
