@@ -5,8 +5,8 @@ import {
   GraduationCap,
   Star,
   Users,
-  CheckCircle2,
-  XCircle,
+  // CheckCircle2,
+  // XCircle,
   UserCog,
   StarHalf,
 } from "lucide-react";
@@ -167,7 +167,7 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-base font-semibold md:text-lg">
                 Rating Status
@@ -186,7 +186,7 @@ export default function Home() {
                 Lecturer ratings status
               </p>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     );
