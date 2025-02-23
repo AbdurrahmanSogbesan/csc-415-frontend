@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  AudioWaveform,
-  Bot,
-  Command,
-  GalleryVerticalEnd,
-  LayoutDashboard,
-  Settings,
-} from "lucide-react";
+import { Bot, LayoutDashboard, Settings } from "lucide-react";
 
 import { NavMain } from "@/components/NavMain";
 import { NavUser } from "@/components/NavUser";
@@ -26,23 +19,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const data = useMemo(() => {
     return {
-      teams: [
-        {
-          name: "Task Mentor",
-          logo: GalleryVerticalEnd,
-          plan: "Enterprise",
-        },
-        {
-          name: "Acme Corp.",
-          logo: AudioWaveform,
-          plan: "Startup",
-        },
-        {
-          name: "Evil Corp.",
-          logo: Command,
-          plan: "Free",
-        },
-      ],
       navMain: [
         {
           title: "Dashboard",
@@ -70,7 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
