@@ -1,3 +1,4 @@
+import { passwordValidation } from "@/lib/utils";
 import { z } from "zod";
 
 export const profileSchema = z.object({
@@ -8,7 +9,12 @@ export const profileSchema = z.object({
 export const passwordSchema = z
   .object({
     old_password: z.string().min(1, "Current password is required"),
-    new_password: z.string().min(8, "Password must be at least 8 characters"),
+    new_password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .refine(passwordValidation, {
+        message: "You password is too weak. Try a stronger one.",
+      }),
     new_password2: z.string(),
   })
   .refine((data) => data.new_password === data.new_password2, {

@@ -5,10 +5,20 @@ import { jwtDecode } from "jwt-decode";
 import { API_BASE_URL } from "./constants";
 import { useAuthStore } from "./stores/auth";
 import axios from "axios";
+import zxcvbn from "zxcvbn";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const passwordValidation = (password: string) => {
+  const result = zxcvbn(password);
+
+  if (result.score < 2) {
+    return false;
+  }
+  return true;
+};
 
 interface TokenManagerConfig {
   accessTokenKey: string;

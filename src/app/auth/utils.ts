@@ -1,3 +1,4 @@
+import { passwordValidation } from "@/lib/utils";
 import * as z from "zod";
 
 export const loginSchema = z.object({
@@ -17,7 +18,10 @@ export const registerSchema = z
     email: z.string().email("Please enter a valid email"),
     password: z
       .string({ required_error: "Password is required" })
-      .min(8, "Password must be at least 8 characters"),
+      .min(8, "Password must be at least 8 characters")
+      .refine(passwordValidation, {
+        message: "Your password is too weak. Try a stronger one.",
+      }),
     password2: z.string({
       required_error: "Confirm password is required",
     }),
