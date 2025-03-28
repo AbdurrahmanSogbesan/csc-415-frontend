@@ -1,5 +1,6 @@
 import { NotebookText } from "lucide-react";
 import { Outlet } from "react-router";
+import AuthImage from "@/assets/images/auth-image.webp";
 
 export default function AuthLayout() {
   return (
@@ -21,9 +22,9 @@ export default function AuthLayout() {
       </div>
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="/placeholder.svg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          src={AuthImage}
+          alt="Auth Image"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
     </div>
